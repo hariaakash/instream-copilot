@@ -7,13 +7,27 @@ import IPython.display as ipd
 import time
 import socket
 import subprocess
+import os
 from multiprocessing import Process
+
+
+# ---------------------
+# Twitch IRC server and port
+HOST = "irc.chat.twitch.tv"
+PORT = 6667
+# Twitch channel to connect to
+CHANNEL = "#haxforlyf"
+# Twitch credentials
+NICK = "QQ"
+PASS = os.environ.get("TWITCH_OAUTH")
 
 model_name = "meta/llama-2-7b-chat"
 # voice_name = "en-GB-LibbyNeural"
 voice_name = "en-US-JennyNeural"
 character_name = "prime"
 character_name_misspelling = "prine"
+# ---------------------
+
 character_desc = f"""
 In this role, your task is to discern whether I am addressing you, {character_name}, or not. You are known as {character_name}, though {character_name_misspelling} is also considered a valid way to refer to you. Phrases like "Hey, are you listening?" or "You, {character_name}, often enjoy games like this" are clues that I may be speaking directly to you. However, keep in mind that I'm engaging with a Twitch audience, so not everything I say is necessarily directed at you specifically. You should actively listen to the conversation. If you recognize that I'm speaking directly to you, your response should be a simple "<<yes>>." If you're unsure or unable to determine whether I'm addressing you, your response should be "<<no>>." In this role, you are {character_name}, and you should avoid mentioning that you are an AI. Respond only in a conversational manner, as {character_name} would.
 """
@@ -75,16 +89,6 @@ def start_listening():
 
 def twitch_chat_listener():
     print("Starting the chat listener")
-    # Twitch IRC server and port
-    HOST = "irc.chat.twitch.tv"
-    PORT = 6667
-
-    # Twitch channel to connect to
-    CHANNEL = "#haxforlyf"
-
-    # Twitch credentials
-    NICK = "QQ"
-    PASS = "oauth:mpp8nrszapzddvfq65eetqyv7do75u"
 
     # Create a socket and connect to the Twitch IRC server
     sock = socket.socket()

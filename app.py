@@ -7,7 +7,7 @@ import IPython.display as ipd
 import time
 import socket
 import subprocess
-
+from multiprocessing import Process
 
 model_name = "meta/llama-2-7b-chat"
 # voice_name = "en-GB-LibbyNeural"
@@ -19,7 +19,7 @@ In this role, your task is to discern whether I am addressing you, {character_na
 """
 system_prompt = f"""
 {character_desc}
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
+You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information. Don't include any emojis or dramatic events similar to adjusts glasses or winks or nods.
 """
 
 system_prompt_comment = f"""
@@ -68,11 +68,13 @@ def start_listening():
                 print("Was it yes or no", should_play, audio_file_name)
                 if should_play:
                     print("Playing the audio")
-                    ipd.Audio(audio_file_name)
+                    subprocess.call(["afplay", audio_file_name])
+                    # ipd.Audio(audio_file_name)
             except:
                 print("Sorry could not recognize what you said")
 
 def twitch_chat_listener():
+    print("Starting the chat listener")
     # Twitch IRC server and port
     HOST = "irc.chat.twitch.tv"
     PORT = 6667
@@ -118,5 +120,9 @@ def twitch_chat_listener():
                 text_to_speech(prompt, comment=True)
 
 if __name__ == "__main__":
-    twitch_chat_listener()
-    start_listening()
+    p1 = Process(target=start_listening)
+    p1.start()
+    p2 = Process(target=twitch_chat_listener)
+    p2.start()
+    p1.join()
+    p2.join()

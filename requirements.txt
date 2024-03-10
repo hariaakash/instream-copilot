@@ -1,0 +1,9 @@
+ipython==8.12.3
+python-dotenv==1.0.1
+replicate==0.24.0
+SpeechRecognition==3.10.1
+twitchio==2.0.0
+torch==1.10.0
+scipy==1.8.0
+edge-tts==1.0.0
+pyaudio==0.2.11
